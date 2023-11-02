@@ -40,27 +40,38 @@ namespace MC_mods_installer
 
             ReadFiles(out links, out downloadOptions);
 
-            foreach (string url in links)
+            if (links != null && downloadOptions != null)
             {
-                string fileName = Path.GetFileName(new Uri(url).LocalPath);
-                string destinationPath = Path.Combine(destinationDirectory, fileName);
+                foreach (var link in links)
+                {
+                    if (!link.IsOptional || (link.IsOptional && downloadOptions.Files.ContainsKey(link.Url) && downloadOptions.Files[link.Url]))
+                    {
+                        string fileName = Path.GetFileName(new Uri(link.Url).LocalPath);
+                        string destinationPath = Path.Combine(destinationDirectory, fileName);
 
-                Process process = new Process();
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = $"/C curl -o \"{destinationPath}\" {url}";
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
-                if (File.Exists(destinationPath))
-                {
-                    Console.WriteLine($"Plik {fileName} został pomyślnie pobrany i zapisany w odpowiednim folderze.");
+                        Process process = new Process();
+                        ProcessStartInfo startInfo = new ProcessStartInfo();
+                        startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                        startInfo.FileName = "cmd.exe";
+                        startInfo.Arguments = $"/C curl -o \"{destinationPath}\" {link.Url}";
+                        process.StartInfo = startInfo;
+                        process.Start();
+                        process.WaitForExit();
+
+                        if (File.Exists(destinationPath))
+                        {
+                            Console.WriteLine($"Plik {fileName} został pomyślnie pobrany i zapisany w odpowiednim folderze.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Wystąpił błąd podczas pobierania pliku {fileName}.");
+                        }
+                    }
                 }
-                else
-                {
-                    Console.WriteLine($"Wystąpił błąd podczas pobierania pliku {fileName}.");
-                }
+            }
+            else
+            {
+                Console.WriteLine("Nie udało się wczytać plików links.json i config.json.");
             }
         }
     }

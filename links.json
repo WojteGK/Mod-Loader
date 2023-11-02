@@ -1,0 +1,9 @@
+{
+  "links": [
+    {
+      "name": "torch hit",
+      "url": "https://mediafilez.forgecdn.net/files/4835/473/torchhit-1.20.2-6.0.2.0-fabric.jar",
+      "optional": false
+    }
+  ]
+}
