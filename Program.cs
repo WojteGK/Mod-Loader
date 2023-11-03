@@ -7,14 +7,30 @@ namespace MC_mods_installer
 {
     internal class Program
     {
-        static string ExePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+        static string ExePath = AppContext.BaseDirectory;
         static void ReadFiles(out List<Link> links, out DownloadOptions downloadOptions)
         {
             links = null;
             downloadOptions = null;
 
-            string linksJsonPath = Path.Combine(Path.GetDirectoryName(ExePath), "links.json");
-            string configJsonPath = Path.Combine(Path.GetDirectoryName(ExePath), "config.json");
+            string exePath = ExePath;
+
+            if (string.IsNullOrEmpty(exePath))
+            {
+                Console.WriteLine("Ścieżka do pliku wykonywalnego jest pusta.");
+                return;
+            }
+
+            string directoryPath = Path.GetDirectoryName(exePath);
+
+            if (string.IsNullOrEmpty(directoryPath))
+            {
+                Console.WriteLine("Ścieżka do katalogu zawierającego plik wykonywalny jest pusta.");
+                return;
+            }
+
+            string linksJsonPath = Path.Combine(directoryPath, "links.json");
+            string configJsonPath = Path.Combine(directoryPath, "config.json");
 
             try
             {
@@ -44,6 +60,7 @@ namespace MC_mods_installer
                 // Obsłuż błąd deserializacji, na przykład informując użytkownika o problemie z plikami JSON.
             }
         }
+
         static void Main(string[] args)
         {
             Console.WriteLine(ExePath);
