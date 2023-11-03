@@ -16,27 +16,47 @@ namespace MC_mods_installer
             string linksJsonPath = Path.Combine(Path.GetDirectoryName(ExePath), "links.json");
             string configJsonPath = Path.Combine(Path.GetDirectoryName(ExePath), "config.json");
 
-            if (File.Exists(linksJsonPath) && File.Exists(configJsonPath))
+            try
             {
-                string linksJson = File.ReadAllText(linksJsonPath);
-                string configJson = File.ReadAllText(configJsonPath);
+                if (File.Exists(linksJsonPath))
+                {
+                    string linksJson = File.ReadAllText(linksJsonPath);
+                    links = JsonConvert.DeserializeObject<List<Link>>(linksJson);
+                }
+                else
+                {
+                    Console.WriteLine("Plik links.json nie istnieje.");
+                }
 
-                links = JsonConvert.DeserializeObject<List<Link>>(linksJson);
-                downloadOptions = JsonConvert.DeserializeObject<DownloadOptions>(configJson);
+                if (File.Exists(configJsonPath))
+                {
+                    string configJson = File.ReadAllText(configJsonPath);
+                    downloadOptions = JsonConvert.DeserializeObject<DownloadOptions>(configJson);
+                }
+                else
+                {
+                    Console.WriteLine("Plik config.json nie istnieje.");
+                }
             }
-            else
+            catch (JsonException ex)
             {
-                Console.WriteLine("Plik links.json lub config.json nie istnieje.");
+                Console.WriteLine($"Błąd deserializacji JSON: {ex.Message}");
+                // Obsłuż błąd deserializacji, na przykład informując użytkownika o problemie z plikami JSON.
             }
         }
         static void Main(string[] args)
         {
-
+            Console.WriteLine(ExePath);
             string UserName = Environment.UserName;
+
             string destinationDirectory = $"C:\\Users\\{UserName}\\Downloads\\mods\\";
-            
-            List<Link> links;
-            DownloadOptions downloadOptions;
+            if (!Directory.Exists(destinationDirectory))
+            {
+                Directory.CreateDirectory(destinationDirectory);
+            }
+
+            List<Link>? links = null;
+            DownloadOptions? downloadOptions = null;
 
             ReadFiles(out links, out downloadOptions);
 
@@ -73,6 +93,7 @@ namespace MC_mods_installer
             {
                 Console.WriteLine("Nie udało się wczytać plików links.json i config.json.");
             }
+            Console.ReadKey();
         }
     }
 }
