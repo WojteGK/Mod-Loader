@@ -7,7 +7,8 @@ namespace MC_mods_installer
 {
     internal class Program
     {
-        static string ExePath = AppContext.BaseDirectory;
+        static string ExePath = AppDomain.CurrentDomain.BaseDirectory;
+
         static void ReadFiles(out List<Link> links, out DownloadOptions downloadOptions)
         {
             links = null;
@@ -56,8 +57,7 @@ namespace MC_mods_installer
             }
             catch (JsonException ex)
             {
-                Console.WriteLine($"Błąd deserializacji JSON: {ex.Message}");
-                // Obsłuż błąd deserializacji, na przykład informując użytkownika o problemie z plikami JSON.
+                Console.WriteLine($"Błąd deserializacji JSON: {ex.Message}");                
             }
         }
 
@@ -71,7 +71,6 @@ namespace MC_mods_installer
             {
                 Directory.CreateDirectory(destinationDirectory);
             }
-
             List<Link>? links = null;
             DownloadOptions? downloadOptions = null;
 
