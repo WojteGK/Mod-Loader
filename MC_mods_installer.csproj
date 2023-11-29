@@ -11,7 +11,12 @@
     <StartupObject>MC_mods_installer.Program</StartupObject>
     <PlatformTarget>AnyCPU</PlatformTarget>
 	  <PublishDir>bin\Release\net6.0\Publish</PublishDir>
+	  <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
 	<ItemGroup>
 		<None Update="links.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
