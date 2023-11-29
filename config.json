@@ -1,5 +1,30 @@
 {
   "downloadOptions": {
-    "torch hit": true
-  }
+    "torch hit": true,
+    "fastback": true,
+    "Quickplant": true,
+    "voicechat": true,
+    "combatroll": true,
+    "farsight": true,
+    "Origins": true,
+    "skyvillages": true,
+    "dungeons and taverns": true,
+    "RPGOrigins": true, 
+    "fabric-release-regrowth": true,
+    "firstperson": true,
+    "darkstarter": true,
+    "rpg hud": true,
+    "cookedcarrots": true,
+    "blossom": true,
+    "strange berries": true,
+    "wardentools": true,
+    "entityculling-fabric": true,
+    "ferritecore": true,
+    "AmbientSounds": true,
+    "Terralith": true,
+    "ImmediatelyFast": true,
+    "deeperdarker-fabric": true,
+    "Fabulously.Optimized": true,
+    "Travelers-Backpack-Mod-Fabric": true
+   }
 }

@@ -1,7 +1,136 @@
 [
   {
-    "Name": "torch hit",
-    "Url": "https://mediafilez.forgecdn.net/files/4835/473/torchhit-1.20.2-6.0.2.0-fabric.jar",
-    "IsOptional": false
+    "mods": [
+      {
+        "Name": "torch hit",
+        "Url": "https://mediafilez.forgecdn.net/files/4835/473/torchhit-1.20.2-6.0.2.0-fabric.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "fastback",
+        "Url": "https://mediafilez.forgecdn.net/files/4782/87/fastback-0.16.2%2B1.20.2-fabric.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "Quickplant",
+        "Url": "https://mediafilez.forgecdn.net/files/4778/797/QuickPlant-Fabric-1.20.2-1.0.0.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "voicechat",
+        "Url": "https://mediafilez.forgecdn.net/files/4908/397/voicechat-fabric-1.20.2-2.4.29.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "combatroll",
+        "Url": "https://mediafilez.forgecdn.net/files/4831/694/combatroll-fabric-1.3.0%2B1.20.2.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "farsight",
+        "Url": "https://mediafilez.forgecdn.net/files/4836/498/farsight-fabric-1.20.2-4.1.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "Origins",
+        "Url": "https://mediafilez.forgecdn.net/files/4804/905/Origins-1.20.2-1.11.3.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "skyvillages",
+        "Url": "https://mediafilez.forgecdn.net/files/4850/37/SkyVillages-1.0.3.2-1.19.2-1.20.1-fabric.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "dungeons and taverns",
+        "Url": "https://mediafilez.forgecdn.net/files/4788/249/dungeons-and-taverns-3.0.3+%5BFabric%5D.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "RPGOrigins",
+        "Url": "https://mediafilez.forgecdn.net/files/4775/946/RPGOrigins-1.4.1.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "fabric-release-regrowth",
+        "Url": "https://mediafilez.forgecdn.net/files/4679/666/fabric-release-regrowth-1.20-83.31.1",
+        "IsOptional": false
+      },
+      {
+        "Name": "firstperson",
+        "Url": "https://mediafilez.forgecdn.net/files/4833/127/firstperson-fabric-2.2.4-mc1.20.2.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "darkstarter",
+        "Url": "https://mediafilez.forgecdn.net/files/4765/162/darkstarter-fabric-1.20.2-1.0.4.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "rpg hud",
+        "Url": "https://mediafilez.forgecdn.net/files/4789/161/%5B1.20.2%5D%5BFabric%5D+RPG-HUD-3.10.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "cookedcarrots",
+        "Url": "https://mediafilez.forgecdn.net/files/4765/487/cookedcarrots-1.20.2-0-fabric.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "blossom",
+        "Url": "https://mediafilez.forgecdn.net/files/4548/200/blossom-fabric-1.20-pre4-1.0.7.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "strange berries",
+        "Url": "https://mediafilez.forgecdn.net/files/4779/347/strange-berries-2.3.3-1.20.2.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "wardentools",
+        "Url": "https://mediafilez.forgecdn.net/files/4797/90/wardentools-2.3.2%2Bmc1.20.2.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "entityculling-fabric",
+        "Url": "https://mediafilez.forgecdn.net/files/4763/646/entityculling-fabric-1.6.2-mc1.20.1.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "ferritecore",
+        "Url": "https://mediafilez.forgecdn.net/files/4810/977/ferritecore-6.0.1-fabric.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "AmbientSounds",
+        "Url": "https://mediafilez.forgecdn.net/files/4779/231/AmbientSounds_FABRIC_v5.2.23_mc1.20.2.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "Terralith",
+        "Url": "https://mediafilez.forgecdn.net/files/4823/753/Terralith_1.20.2_v2.4.8.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "ImmediatelyFast",
+        "Url": "https://mediafilez.forgecdn.net/files/4855/541/ImmediatelyFast-1.2.7%2B1.20.2.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "deeperdarker-fabric",
+        "Url": "https://mediafilez.forgecdn.net/files/4841/587/deeperdarker-fabric-1.20.2-1.2.3.jar",
+        "IsOptional": false
+      },
+      {
+        "Name": "Fabulously.Optimized",
+        "Url": "https://mediafilez.forgecdn.net/files/4903/285/Fabulously.Optimized-5.6.0.zip",
+        "IsOptional": false
+      },
+      {
+        "Name": "Travelers-Backpack-Mod-Fabric",
+        "Url": "https://files2.9minecraft.net/index.php?act=download&id=1696570709&hash=65663142b5894",
+        "IsOptional": false
+      }
+    ]
   }
 ]
