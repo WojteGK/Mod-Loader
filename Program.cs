@@ -7,9 +7,40 @@ namespace MC_mods_installer
 {
     internal class Program
     {
-        static string ExePath = AppDomain.CurrentDomain.BaseDirectory;
+        protected static string ExePath = AppDomain.CurrentDomain.BaseDirectory;
+        protected static string UserName = Environment.UserName;
+        protected static string RoamingPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        protected static string DestinationPath = $"C:\\Users\\{UserName}\\NevaCraft";
+        public static void DisplayMenu(bool isPrinted = true)
+        {
+            Console.WriteLine("1. Install mods");
+            Console.WriteLine("2. Uninstall mods");
+            Console.WriteLine("3. Exit");            
+            while (isPrinted)
+            {
+                string result = Console.ReadLine();
+                switch (result)
+                {
+                    case "1":
+                        // Kod dla opcji 1
+                        Console.WriteLine("Wybrano opcję 1.");
+                        break;
+                    case "2":
+                        // Kod dla opcji 2
+                        Console.WriteLine("Wybrano opcję 2.");
+                        break;
+                    case "3":
+                        // Kod dla wyjścia z menu
+                        isPrinted = false;
+                        break;
+                    default:
+                        Console.WriteLine("Nieznana opcja.");
+                        break;
+                }
+            }
+        }
 
-        static void ReadFiles(out List<Link> links, out DownloadOptions downloadOptions)
+        protected static void ReadFiles(out List<Link> links, out DownloadOptions downloadOptions)
         {
             links = null;
             downloadOptions = null;
@@ -60,21 +91,23 @@ namespace MC_mods_installer
                 Console.WriteLine($"Błąd deserializacji JSON: {ex.Message}");                
             }
         }
-
-        static void Main(string[] args)
+        static string GetExePath()
         {
-            Console.WriteLine(ExePath);
-            string UserName = Environment.UserName;
-
-            string destinationDirectory = $"C:\\Users\\{UserName}\\Downloads\\mods\\";
-            if (!Directory.Exists(destinationDirectory))
+            string exePath = AppDomain.CurrentDomain.BaseDirectory;
+            return exePath;
+        }
+        static void DownloadFiles(string destinationPath){
+            if (!Directory.Exists(destinationPath))
             {
-                Directory.CreateDirectory(destinationDirectory);
+                Directory.CreateDirectory(destinationPath);
             }
             List<Link>? links = null;
             DownloadOptions? downloadOptions = null;
-
             ReadFiles(out links, out downloadOptions);
+            if (!Directory.Exists(destinationPath))
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
 
             if (links != null && downloadOptions != null)
             {
@@ -83,18 +116,18 @@ namespace MC_mods_installer
                     if (!link.IsOptional || (link.IsOptional && downloadOptions.Files.ContainsKey(link.Url) && downloadOptions.Files[link.Url]))
                     {
                         string fileName = Path.GetFileName(new Uri(link.Url).LocalPath);
-                        string destinationPath = Path.Combine(destinationDirectory, fileName);
+                        string filePath = Path.Combine(DestinationPath, fileName);
 
                         Process process = new Process();
                         ProcessStartInfo startInfo = new ProcessStartInfo();
+                        process.StartInfo = startInfo;
                         startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                         startInfo.FileName = "cmd.exe";
-                        startInfo.Arguments = $"/C curl -o \"{destinationPath}\" {link.Url}";
-                        process.StartInfo = startInfo;
+                        startInfo.Arguments = $"/C curl -o \"{filePath}\" {link.Url}";                        
                         process.Start();
                         process.WaitForExit();
 
-                        if (File.Exists(destinationPath))
+                        if (File.Exists(filePath))
                         {
                             Console.WriteLine($"Plik {fileName} został pomyślnie pobrany i zapisany w odpowiednim folderze.");
                         }
@@ -106,10 +139,16 @@ namespace MC_mods_installer
                 }
             }
             else
-            {
+            {                
                 Console.WriteLine("Nie udało się wczytać plików links.json i config.json.");
             }
             Console.ReadKey();
         }
+        static void Main(string[] args)
+        {            
+            DisplayMenu();            
+            DownloadFiles(DestinationPath);
+                    
+        }        
     }
 }
