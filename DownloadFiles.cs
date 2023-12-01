@@ -31,5 +31,20 @@ namespace MC_mods_installer
             new Link("Fabulously.Optimized", "https://mediafilez.forgecdn.net/files/4903/285/Fabulously.Optimized-5.6.0.zip", false),
             new Link("Travelers-Backpack-Mod-Fabric", "https://files2.9minecraft.net/index.php?act=download&id=1696570709&hash=65663142b5894", false),
         };
+        public static List<Link> Shaders = new() {
+            new Link("Sildurs Vibrant Shaders", "https://www.curseforge.com/minecraft/customization/sildurs-vibrant-shaders/download/3387454/file", true),
+            new Link("BSL Shaders", "https://www.curseforge.com/minecraft/customization/bsl-shaders/download/3387454/file", true),
+            new Link("Chocapic13 Shaders", "https://www.curseforge.com/minecraft/customization/chocapic13-shaders/download/3387454/file", true),
+            new Link("Continuum Shaders", "https://www.curseforge.com/minecraft/customization/continuum-shaders/download/3387454/file", true),
+            new Link("SEUS Shaders", "https://www.curseforge.com/minecraft/customization/seus-shaders/download/3387454/file", true),
+            new Link("KUDA Shaders", "https://www.curseforge.com/minecraft/customization/kuda-shaders/download/3387454/file", true),
+            new Link("Sonic Ether's Unbelievable Shaders", "https://www.curseforge.com/minecraft/customization/sonic-ethers-unbelievable-shaders/download/3387454/file", true),
+            new Link("Lagless Shaders", "https://www.curseforge.com/minecraft/customization/lagless-shaders/download/3387454/file", true),
+            new Link("Sushi Shader", "https://www.curseforge.com/minecraft/customization/sushi-shader/download/3387454/file", true),
+            new Link("Nostalgia Shader", "https://www.curseforge.com/minecraft/customization/nostalgia-shader/download/3387454/file", true),
+            new Link("Naelegos Cel Shaders", "https://www.curseforge.com/minecraft/customization/naelegos-cel-shaders/download/3387454/file", true),
+            new Link("Oceano Shaders", "https://www.curseforge.com/minecraft/customization/oceano-shaders/download/3387454/file", true),
+            new Link("SFLP Shaders", "https://www.curseforge.com/minecraft/customization/sflp-shaders/download/3387454/file", true)            
+        };
     }
 }
