@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Authentication.ExtendedProtection;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace MC_mods_installer
 {
@@ -78,47 +79,27 @@ namespace MC_mods_installer
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
             return exePath;
         }
-        static void Download(string destinationPath){
-            if (!Directory.Exists(destinationPath))
+        public static async Task DownloadFiles(List<Link> links, string destinationPath)
+        {
+            using (var httpClient = new HttpClient())
             {
-                Directory.CreateDirectory(destinationPath);
-            }                       
-
-            if (DownloadFiles.Mods != null && DownloadConfig.Mods != null)
-            {
-                foreach (var link in DownloadFiles.Mods)
+                foreach (var link in links)
                 {
-                    if (!link.IsOptional || (link.IsOptional && DownloadConfig.Mods.ContainsKey(link.Url) && DownloadConfig.Mods[link.Url]))
+                    var fileName = Path.GetFileName(new Uri(link.Url).AbsolutePath);
+                    var destinationFilePath = Path.Combine(destinationPath, fileName);
+
+                    var response = await httpClient.GetAsync(link.Url);
+
+                    using (var memoryStream = await response.Content.ReadAsStreamAsync())
                     {
-                        string fileName = Path.GetFileName(new Uri(link.Url).LocalPath);
-                        string filePath = Path.Combine(DestinationPath, fileName);
-
-                        Process process = new Process();
-                        ProcessStartInfo startInfo = new ProcessStartInfo();
-                        process.StartInfo = startInfo;
-                        startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        startInfo.FileName = "cmd.exe";
-                        startInfo.Arguments = $"/C curl -o \"{filePath}\" {link.Url}";                        
-                        process.Start();
-                        process.WaitForExit();
-
-                        if (File.Exists(filePath))
+                        using (var fileStream = File.Create(destinationFilePath))
                         {
-                            Console.WriteLine($"Plik {fileName} został pomyślnie pobrany i zapisany w odpowiednim folderze.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Wystąpił błąd podczas pobierania pliku {fileName}.");
+                            memoryStream.CopyTo(fileStream);
                         }
                     }
                 }
             }
-            else
-            {                
-                Console.WriteLine("Nie udało się wczytać plików links.json i config.json.");
-            }
-            Console.ReadKey();
-        }
+        }        
         static void Main(string[] args)
         {            
             DisplayMenu();            
