@@ -131,6 +131,18 @@
         "Url": "https://files2.9minecraft.net/index.php?act=download&id=1696570709&hash=65663142b5894",
         "IsOptional": false
       }
+    ],
+    "shaders": [
+      {
+        "Name": "shader1",
+        "Url": "link1"
+      }      
+    ],
+    "textures": [
+      {
+        "Name": "texture1",
+        "Url": "link1"
+      }
     ]
   }
 ]
