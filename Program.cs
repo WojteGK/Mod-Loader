@@ -92,7 +92,7 @@ namespace MC_mods_installer
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
             return exePath;
         }
-        public static async Task DownloadFileAsync(Link link, string destinationPath)
+        public static async Task DownloadFileAsync(Resource link, string destinationPath)
         {
             using (var httpClient = new HttpClient())
             {
