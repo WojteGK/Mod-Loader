@@ -10,17 +10,20 @@ namespace MC_mods_installer
 {
     internal class Program
     {
+        protected static string NevaCraftVersion = "v1.0";
         protected static string ExePath = AppDomain.CurrentDomain.BaseDirectory;
         protected static string UserName = Environment.UserName;
         protected static string RoamingPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        protected static string DestinationPath = $"C:\\Users\\{UserName}\\NevaCraft";
+        protected static string DestinationPath = $"C:\\Users\\{UserName}\\NevaCraft\\{NevaCraftVersion}";
         protected static string ModsPath = Path.Combine(DestinationPath, "mods");
         public static void InitializeRoaming(){
-            string NevaCraftRoamingPath = Path.Combine(RoamingPath, "NevaCraft");
+            string NevaCraftRoamingPath = Path.Combine(RoamingPath, $"NevaCraft\\{NevaCraftVersion}");
             if (!Directory.Exists(NevaCraftRoamingPath))
             {
                 Directory.CreateDirectory(NevaCraftRoamingPath);
-            }            
+            }
+
+
         }
         public static void WriteColorOptions(string text, ConsoleColor textColor = ConsoleColor.White, ConsoleColor digitColor = ConsoleColor.Red)
         {
@@ -69,42 +72,23 @@ namespace MC_mods_installer
                         break;
                 }
             }
-        }
-        public static void ReadFiles(out List<Link> links, out DownloadConfig downloadConfig)
-        {            
-            string linksPath = Path.Combine(ExePath, "links.json");
-            string downloadconfigPath = Path.Combine(ExePath, "config.json");
-            if (File.Exists(linksPath) && File.Exists(downloadconfigPath))
-            {
-                links = JsonConvert.DeserializeObject<List<Link>>(File.ReadAllText(linksPath));
-                downloadConfig = JsonConvert.DeserializeObject<DownloadConfig>(File.ReadAllText(downloadconfigPath));
-            }
-            else
-            {
-                throw new Exception("nie znaleziono plików links.json i config.json.");                           
-            }
-        }
+        }        
         static string GetExePath()
         {
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
             return exePath;
         }
-        static void DownloadFiles(string destinationPath){
+        static void Download(string destinationPath){
             if (!Directory.Exists(destinationPath))
             {
                 Directory.CreateDirectory(destinationPath);
-            }
-            ReadFiles(out List<Link> links, out DownloadConfig downloadConfig);
-            if (!Directory.Exists(destinationPath))
-            {
-                Directory.CreateDirectory(destinationPath);
-            }
+            }                       
 
-            if (links != null && downloadConfig != null)
+            if (DownloadFiles.Mods != null && DownloadConfig.Mods != null)
             {
-                foreach (var link in links)
+                foreach (var link in DownloadFiles.Mods)
                 {
-                    if (!link.IsOptional || (link.IsOptional && downloadConfig.Files.ContainsKey(link.Url) && downloadConfig.Files[link.Url]))
+                    if (!link.IsOptional || (link.IsOptional && DownloadConfig.Mods.ContainsKey(link.Url) && DownloadConfig.Mods[link.Url]))
                     {
                         string fileName = Path.GetFileName(new Uri(link.Url).LocalPath);
                         string filePath = Path.Combine(DestinationPath, fileName);
