@@ -26,6 +26,17 @@ namespace MC_mods_installer
 
 
         }
+        public static void InitializeDestination()
+        {
+            if (!Directory.Exists(DestinationPath))
+            {
+                Directory.CreateDirectory(DestinationPath);
+            }
+            if (!Directory.Exists(ModsPath))
+            {
+                Directory.CreateDirectory(ModsPath);
+            }
+        }
         public static void WriteColorOptions(string text, ConsoleColor textColor = ConsoleColor.White, ConsoleColor digitColor = ConsoleColor.Red)
         {
             Regex digitPattern = new Regex(@"\d");
@@ -60,7 +71,9 @@ namespace MC_mods_installer
                 switch (result)
                 {
                     case '1':
-                        throw new NotImplementedException();
+                        InitializeRoaming();
+                        InitializeDestination();
+                        
                         break;
                     case '2':
                         throw new NotImplementedException();
@@ -79,27 +92,41 @@ namespace MC_mods_installer
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
             return exePath;
         }
-        public static async Task DownloadFiles(List<Link> links, string destinationPath)
+        public static async Task DownloadFileAsync(Link link, string destinationPath)
         {
             using (var httpClient = new HttpClient())
             {
-                foreach (var link in links)
+                var fileName = "";
+                try
                 {
-                    var fileName = Path.GetFileName(new Uri(link.Url).AbsolutePath);
-                    var destinationFilePath = Path.Combine(destinationPath, fileName);
+                    fileName = Path.GetFileName(new Uri(link.Url).AbsolutePath);
+                }
+                catch (UriFormatException)
+                {
+                    Console.WriteLine($"Invalid URL: {link.Url}");
+                    return;
+                }
 
+                var destinationFilePath = Path.Combine(destinationPath, fileName);
+
+                try
+                {
                     var response = await httpClient.GetAsync(link.Url);
 
-                    using (var memoryStream = await response.Content.ReadAsStreamAsync())
+                    using (var ms = await response.Content.ReadAsStreamAsync())
                     {
-                        using (var fileStream = File.Create(destinationFilePath))
+                        using (var fs = File.Create(destinationFilePath))
                         {
-                            memoryStream.CopyTo(fileStream);
+                            ms.CopyTo(fs);
                         }
                     }
                 }
+                catch (HttpRequestException)
+                {
+                    Console.WriteLine($"Failed to download file from URL: {link.Url}");
+                }
             }
-        }        
+        }
         static void Main(string[] args)
         {            
             DisplayMenu();            
