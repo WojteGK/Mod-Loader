@@ -46,9 +46,9 @@ namespace MC_mods_installer
         public static void DisplayMenu(bool isCleared = true)
         {
             if (isCleared) { Console.Clear(); }
-            WriteColorOptions("[1] -- Install mods --", ConsoleColor.White, ConsoleColor.Yellow);
-            WriteColorOptions("[2] - Uninstall mods -", ConsoleColor.White, ConsoleColor.Yellow);
-            WriteColorOptions("[0] ------ Exit ------", ConsoleColor.White, ConsoleColor.Red);
+            WriteColorOptions("[1] -- Install mods --", ConsoleColor.White, ConsoleColor.Green);
+            WriteColorOptions("[2] - Uninstall mods -", ConsoleColor.White, ConsoleColor.Red);
+            WriteColorOptions("[0] ------ Exit ------", ConsoleColor.White, ConsoleColor.Yellow);
             bool exit = false;         
             while(!exit)
             {
@@ -70,58 +70,20 @@ namespace MC_mods_installer
                 }
             }
         }
-
-        protected static void ReadFiles(out List<Link> links, out DownloadOptions downloadOptions)
-        {
-            links = null;
-            downloadOptions = null;
-
-            string exePath = ExePath;
-
-            if (string.IsNullOrEmpty(exePath))
+        public static void ReadFiles(out List<Link> links, out DownloadConfig downloadConfig)
+        {            
+            string linksPath = Path.Combine(ExePath, "links.json");
+            string downloadconfigPath = Path.Combine(ExePath, "config.json");
+            if (File.Exists(linksPath) && File.Exists(downloadconfigPath))
             {
-                Console.WriteLine("Ścieżka do pliku wykonywalnego jest pusta.");
-                return;
+                links = JsonConvert.DeserializeObject<List<Link>>(File.ReadAllText(linksPath));
+                downloadConfig = JsonConvert.DeserializeObject<DownloadConfig>(File.ReadAllText(downloadconfigPath));
             }
-
-            string directoryPath = Path.GetDirectoryName(exePath);
-
-            if (string.IsNullOrEmpty(directoryPath))
+            else
             {
-                Console.WriteLine("Ścieżka do katalogu zawierającego plik wykonywalny jest pusta.");
-                return;
+                throw new Exception("nie znaleziono plików links.json i config.json.");                           
             }
-
-            string linksJsonPath = Path.Combine(directoryPath, "links.json");
-            string configJsonPath = Path.Combine(directoryPath, "config.json");
-
-            try
-            {
-                if (File.Exists(linksJsonPath))
-                {
-                    string linksJson = File.ReadAllText(linksJsonPath);
-                    links = JsonConvert.DeserializeObject<List<Link>>(linksJson);
-                }
-                else
-                {
-                    Console.WriteLine("Plik links.json nie istnieje.");
-                }
-
-                if (File.Exists(configJsonPath))
-                {
-                    string configJson = File.ReadAllText(configJsonPath);
-                    downloadOptions = JsonConvert.DeserializeObject<DownloadOptions>(configJson);
-                }
-                else
-                {
-                    Console.WriteLine("Plik config.json nie istnieje.");
-                }
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine($"Błąd deserializacji JSON: {ex.Message}");                
-            }
-        }        
+        }
         static string GetExePath()
         {
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
@@ -132,19 +94,17 @@ namespace MC_mods_installer
             {
                 Directory.CreateDirectory(destinationPath);
             }
-            List<Link>? links = null;
-            DownloadOptions? downloadOptions = null;
-            ReadFiles(out links, out downloadOptions);
+            ReadFiles(out List<Link> links, out DownloadConfig downloadConfig);
             if (!Directory.Exists(destinationPath))
             {
                 Directory.CreateDirectory(destinationPath);
             }
 
-            if (links != null && downloadOptions != null)
+            if (links != null && downloadConfig != null)
             {
                 foreach (var link in links)
                 {
-                    if (!link.IsOptional || (link.IsOptional && downloadOptions.Files.ContainsKey(link.Url) && downloadOptions.Files[link.Url]))
+                    if (!link.IsOptional || (link.IsOptional && downloadConfig.Files.ContainsKey(link.Url) && downloadConfig.Files[link.Url]))
                     {
                         string fileName = Path.GetFileName(new Uri(link.Url).LocalPath);
                         string filePath = Path.Combine(DestinationPath, fileName);

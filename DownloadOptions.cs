@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MC_mods_installer
 {
-    internal class DownloadOptions
+    internal class DownloadConfig
     {
-        public Dictionary<string, bool> Files {get; set;}
+        public Dictionary<string, bool> Files {get; set;}        
     }
 }
