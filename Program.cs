@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Security.Authentication.ExtendedProtection;
 
 namespace MC_mods_installer
 {
@@ -11,27 +13,33 @@ namespace MC_mods_installer
         protected static string UserName = Environment.UserName;
         protected static string RoamingPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         protected static string DestinationPath = $"C:\\Users\\{UserName}\\NevaCraft";
-        public static void DisplayMenu(bool isPrinted = true)
+        public static void WriteColorLine(string text, ConsoleColor color = ConsoleColor.White)
         {
-            Console.WriteLine("1. Install mods");
-            Console.WriteLine("2. Uninstall mods");
-            Console.WriteLine("3. Exit");            
-            while (isPrinted)
+             Console.ForegroundColor = color;
+            int leftPadding = (Console.WindowWidth - text.Length) / 2;
+            Console.WriteLine(text.PadLeft(leftPadding + text.Length));
+            Console.ResetColor();            
+        }   
+        public static void DisplayMenu(bool isCleared = true)
+        {
+            if (isCleared) { Console.Clear(); }
+            WriteColorLine("Install mods: [1]", ConsoleColor.Green);
+            WriteColorLine("Uninstall mods:  [2]", ConsoleColor.Red);
+            WriteColorLine("Exit: [3]");
+            bool exit = false;         
+            while(!exit)
             {
-                string result = Console.ReadLine();
+                var result = Console.ReadKey(true).KeyChar;
                 switch (result)
                 {
-                    case "1":
-                        // Kod dla opcji 1
-                        Console.WriteLine("Wybrano opcję 1.");
+                    case '1':
+                        throw new NotImplementedException();
                         break;
-                    case "2":
-                        // Kod dla opcji 2
-                        Console.WriteLine("Wybrano opcję 2.");
+                    case '2':
+                        throw new NotImplementedException();
                         break;
-                    case "3":
-                        // Kod dla wyjścia z menu
-                        isPrinted = false;
+                    case '3':                        
+                        exit = true;
                         break;
                     default:
                         Console.WriteLine("Nieznana opcja.");
@@ -147,7 +155,7 @@ namespace MC_mods_installer
         static void Main(string[] args)
         {            
             DisplayMenu();            
-            DownloadFiles(DestinationPath);
+            // DownloadFiles(DestinationPath); // Parameter uriString cannot be null exception
                     
         }        
     }
