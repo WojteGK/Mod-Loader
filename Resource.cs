@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MC_mods_installer
 {
-    internal class Resource
+    public class Resource
     {
         public string Name;
         public string Url;
@@ -17,5 +17,5 @@ namespace MC_mods_installer
             Url = url;
             IsOptional = isOptional;
         }
-    }
+    }    
 }

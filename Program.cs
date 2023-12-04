@@ -23,7 +23,7 @@ namespace MC_mods_installer
             {
                 Directory.CreateDirectory(NevaCraftRoamingPath);
             }
-
+            
 
         }
         public static void InitializeDestination()
@@ -58,6 +58,44 @@ namespace MC_mods_installer
             Console.WriteLine();
             Console.ResetColor();
         }
+        public static void LoadResources()
+        {            
+            string resourcesJsonFilePath = Path.Combine(ExePath, "resources.json");
+            if (!File.Exists(resourcesJsonFilePath))
+            {                
+                
+                throw new FileNotFoundException($"File was not found; Created default json instead: {resourcesJsonFilePath}.");
+            }
+            try
+            {
+                // string json = File.ReadAllText(resourcesJsonFilePath);
+                // foreach (Resources mod in JsonConvert.DeserializeObject<Resources>(json))
+                // {
+                //     DownloadResources.Mods.Add(mod);
+                // }
+            }
+            catch (FileNotFoundException ex)
+            {
+                var resources = new
+                {
+                    mods = DownloadResources.Mods,
+                    shaders = DownloadResources.Shaders,
+                    textures = DownloadResources.Textures
+                };
+                string json = JsonConvert.SerializeObject(resources, Formatting.Indented);
+                File.WriteAllText(resourcesJsonFilePath, json);
+                Console.WriteLine($"File not found: {ex.FileName}. Created default json instead: {resourcesJsonFilePath}.");
+                LoadResources();
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"I/O error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
         public static void DisplayMenu(bool isCleared = true)
         {
             if (isCleared) { Console.Clear(); }
@@ -73,7 +111,8 @@ namespace MC_mods_installer
                     case '1':
                         InitializeRoaming();
                         InitializeDestination();
-                        
+                        LoadResources();
+                        DownloadMods();     
                         break;
                     case '2':
                         throw new NotImplementedException();
@@ -92,18 +131,39 @@ namespace MC_mods_installer
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
             return exePath;
         }
-        public static async Task DownloadFileAsync(Resource link, string destinationPath)
+        public static void DownloadMods(){
+            foreach (Resource mod in DownloadResources.Mods)
+            {
+                if (DownloadConfig.Mods[mod.Name])
+                {
+                    Console.WriteLine($"Downloading {mod.Name}...");
+                    DownloadFileAsync(mod, ModsPath).Wait();
+                }
+            }
+        }
+        public static void DownloadShaders()
+        {
+            foreach (Resource shader in DownloadResources.Shaders)
+            {
+                if (DownloadConfig.Shaders[shader.Name])
+                {
+                    Console.WriteLine($"Downloading {shader.Name}...");
+                    DownloadFileAsync(shader, ModsPath).Wait();
+                }
+            }
+        }
+        public static async Task DownloadFileAsync(Resource resource, string destinationPath)
         {
             using (var httpClient = new HttpClient())
             {
                 var fileName = "";
                 try
                 {
-                    fileName = Path.GetFileName(new Uri(link.Url).AbsolutePath);
+                    fileName = Path.GetFileName(new Uri(resource.Url).AbsolutePath);
                 }
                 catch (UriFormatException)
                 {
-                    Console.WriteLine($"Invalid URL: {link.Url}");
+                    Console.WriteLine($"Invalid URL: {resource.Url}");
                     return;
                 }
 
@@ -111,7 +171,7 @@ namespace MC_mods_installer
 
                 try
                 {
-                    var response = await httpClient.GetAsync(link.Url);
+                    var response = await httpClient.GetAsync(resource.Url);
 
                     using (var ms = await response.Content.ReadAsStreamAsync())
                     {
@@ -123,7 +183,7 @@ namespace MC_mods_installer
                 }
                 catch (HttpRequestException)
                 {
-                    Console.WriteLine($"Failed to download file from URL: {link.Url}");
+                    Console.WriteLine($"Failed to download file from URL: {resource.Url}");
                 }
             }
         }

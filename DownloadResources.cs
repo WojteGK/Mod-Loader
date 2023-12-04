@@ -1,6 +1,6 @@
 namespace MC_mods_installer
 {
-    internal static class DownloadFiles
+    internal static class DownloadResources
     {
         public static List<Resource> Mods = new()
         {
@@ -45,6 +45,9 @@ namespace MC_mods_installer
             new Resource("Naelegos Cel Shaders", "https://www.curseforge.com/minecraft/customization/naelegos-cel-shaders/download/3387454/file", true),
             new Resource("Oceano Shaders", "https://www.curseforge.com/minecraft/customization/oceano-shaders/download/3387454/file", true),
             new Resource("SFLP Shaders", "https://www.curseforge.com/minecraft/customization/sflp-shaders/download/3387454/file", true)            
+        };
+         public static List<Resource> Textures = new() {
+            new Resource("Faithful", "https://www.curseforge.com/minecraft/texture-packs/faithful-32x/download/3387454/file", true),
         };
     }
 }

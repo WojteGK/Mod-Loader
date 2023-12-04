@@ -1,0 +1,9 @@
+
+using System;
+
+public class EmptyModsException : Exception
+{
+    public EmptyModsException() : base("No mods found.")
+    {
+    }
+}
