@@ -62,23 +62,22 @@ namespace MC_mods_installer
             try
             {
                 if (!File.Exists(resourcesJsonFilePath))
-                {                
-                    
+                {
                     throw new FileNotFoundException($"File was not found; Created default json instead: {resourcesJsonFilePath}.");
                 }
                 string json = File.ReadAllText(resourcesJsonFilePath);
                 Resources? jsonObj = JsonConvert.DeserializeObject<Resources>(json);                
                 foreach (Resource resource in jsonObj.Mods) {
-                    DownloadResources.Mods.Add(resource);    
+                    DefaultResources.Mods.Add(resource);
                 }
             }
             catch (FileNotFoundException ex)
             {
                 var resources = new
                 {
-                    mods = DownloadResources.Mods,
-                    shaders = DownloadResources.Shaders,
-                    textures = DownloadResources.Textures
+                    mods = DefaultResources.Mods,
+                    shaders = DefaultResources.Shaders,
+                    textures = DefaultResources.Textures
                 };
                 string json = JsonConvert.SerializeObject(resources, Formatting.Indented);
                 File.WriteAllText(resourcesJsonFilePath, json);
@@ -129,7 +128,7 @@ namespace MC_mods_installer
             return exePath;
         }
         public static void DownloadMods(){
-            foreach (Resource mod in DownloadResources.Mods)
+            foreach (Resource mod in DefaultResources.Mods)
             {
                 if (DownloadConfig.Mods[mod.Name])
                 {
@@ -140,7 +139,7 @@ namespace MC_mods_installer
         }
         public static void DownloadShaders()
         {
-            foreach (Resource shader in DownloadResources.Shaders)
+            foreach (Resource shader in DefaultResources.Shaders)
             {
                 if (DownloadConfig.Shaders[shader.Name])
                 {
