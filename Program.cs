@@ -23,8 +23,6 @@ namespace MC_mods_installer
             {
                 Directory.CreateDirectory(NevaCraftRoamingPath);
             }
-            
-
         }
         public static void InitializeDestination()
         {
@@ -60,19 +58,19 @@ namespace MC_mods_installer
         }
         public static void LoadResources()
         {            
-            string resourcesJsonFilePath = Path.Combine(ExePath, "resources.json");
-            if (!File.Exists(resourcesJsonFilePath))
-            {                
-                
-                throw new FileNotFoundException($"File was not found; Created default json instead: {resourcesJsonFilePath}.");
-            }
+            string resourcesJsonFilePath = Path.Combine(ExePath, "resources.json");            
             try
             {
-                // string json = File.ReadAllText(resourcesJsonFilePath);
-                // foreach (Resources mod in JsonConvert.DeserializeObject<Resources>(json))
-                // {
-                //     DownloadResources.Mods.Add(mod);
-                // }
+                if (!File.Exists(resourcesJsonFilePath))
+                {                
+                    
+                    throw new FileNotFoundException($"File was not found; Created default json instead: {resourcesJsonFilePath}.");
+                }
+                string json = File.ReadAllText(resourcesJsonFilePath);
+                Resources? jsonObj = JsonConvert.DeserializeObject<Resources>(json);                
+                foreach (Resource resource in jsonObj.Mods) {
+                    DownloadResources.Mods.Add(resource);    
+                }
             }
             catch (FileNotFoundException ex)
             {
@@ -84,8 +82,7 @@ namespace MC_mods_installer
                 };
                 string json = JsonConvert.SerializeObject(resources, Formatting.Indented);
                 File.WriteAllText(resourcesJsonFilePath, json);
-                Console.WriteLine($"File not found: {ex.FileName}. Created default json instead: {resourcesJsonFilePath}.");
-                LoadResources();
+                Console.WriteLine($"File not found: {ex.FileName}. Created default json instead: {resourcesJsonFilePath}.");                
             }
             catch (IOException ex)
             {
@@ -116,7 +113,7 @@ namespace MC_mods_installer
                         break;
                     case '2':
                         throw new NotImplementedException();
-                        break;
+                        // break;
                     case '0':                        
                         exit = true;
                         break;

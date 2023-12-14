@@ -1,6 +1,6 @@
 namespace MC_mods_installer
 {
-    internal static class DownloadResources
+    internal static class DefaultResources
     {
         public static List<Resource> Mods = new()
         {
