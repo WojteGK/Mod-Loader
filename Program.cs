@@ -17,6 +17,7 @@ namespace MC_mods_installer
         protected static string RoamingPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         protected static string DestinationPath = $"C:\\Users\\{UserName}\\NevaCraft\\{NevaCraftVersion}";
         protected static string ModsPath = Path.Combine(DestinationPath, "mods");
+        protected static Resources? Resources;
         public static void InitializeRoaming(){
             string NevaCraftRoamingPath = Path.Combine(RoamingPath, $"NevaCraft\\{NevaCraftVersion}");
             if (!Directory.Exists(NevaCraftRoamingPath))
@@ -56,6 +57,16 @@ namespace MC_mods_installer
             Console.WriteLine();
             Console.ResetColor();
         }
+        protected static void CreateDefaultResourcesJson(){
+            var resources = new
+            {
+                mods = DefaultResources.Mods,
+                shaders = DefaultResources.Shaders,
+                textures = DefaultResources.Textures
+            };
+            string json = JsonConvert.SerializeObject(resources, Formatting.Indented);
+            File.WriteAllText(Path.Combine(ExePath, "resources.json"), json);
+        }
         public static void LoadResources()
         {            
             string resourcesJsonFilePath = Path.Combine(ExePath, "resources.json");            
@@ -63,26 +74,12 @@ namespace MC_mods_installer
             {
                 if (!File.Exists(resourcesJsonFilePath))
                 {
-                    throw new FileNotFoundException($"File was not found; Created default json instead: {resourcesJsonFilePath}.");
+                    CreateDefaultResourcesJson();
+                    Console.WriteLine($"File not found: {resourcesJsonFilePath}. Created default json instead: {resourcesJsonFilePath}.");  
                 }
                 string json = File.ReadAllText(resourcesJsonFilePath);
-                Resources? jsonObj = JsonConvert.DeserializeObject<Resources>(json);                
-                foreach (Resource resource in jsonObj.Mods) {
-                    DefaultResources.Mods.Add(resource);
-                }
-            }
-            catch (FileNotFoundException ex)
-            {
-                var resources = new
-                {
-                    mods = DefaultResources.Mods,
-                    shaders = DefaultResources.Shaders,
-                    textures = DefaultResources.Textures
-                };
-                string json = JsonConvert.SerializeObject(resources, Formatting.Indented);
-                File.WriteAllText(resourcesJsonFilePath, json);
-                Console.WriteLine($"File not found: {ex.FileName}. Created default json instead: {resourcesJsonFilePath}.");                
-            }
+                Resources = JsonConvert.DeserializeObject<Resources>(json);  
+            }            
             catch (IOException ex)
             {
                 Console.WriteLine($"I/O error: {ex.Message}");
@@ -90,7 +87,7 @@ namespace MC_mods_installer
             catch (Exception ex)
             {
                 Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            }            
         }
         public static void DisplayMenu(bool isCleared = true)
         {
@@ -108,7 +105,7 @@ namespace MC_mods_installer
                         InitializeRoaming();
                         InitializeDestination();
                         LoadResources();
-                        DownloadMods();     
+                        DownloadMods();
                         break;
                     case '2':
                         throw new NotImplementedException();
