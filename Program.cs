@@ -25,7 +25,7 @@ namespace MC_mods_installer
                 Directory.CreateDirectory(NevaCraftRoamingPath);
             }
         }
-        public static void InitializeDestination()
+        protected static void InitializeDestination()
         {
             if (!Directory.Exists(DestinationPath))
             {
@@ -67,7 +67,7 @@ namespace MC_mods_installer
             string json = JsonConvert.SerializeObject(resources, Formatting.Indented);
             File.WriteAllText(Path.Combine(ExePath, "resources.json"), json);
         }
-        public static void LoadResources()
+        protected static void LoadResources()
         {            
             string resourcesJsonFilePath = Path.Combine(ExePath, "resources.json");            
             try
@@ -94,6 +94,7 @@ namespace MC_mods_installer
             if (isCleared) { Console.Clear(); }
             WriteColorOptions("[1] -- Install mods --", ConsoleColor.White, ConsoleColor.Green);
             WriteColorOptions("[2] - Uninstall mods -", ConsoleColor.White, ConsoleColor.Red);
+            WriteColorOptions("[5] - Reload console -", ConsoleColor.White, ConsoleColor.Blue);
             WriteColorOptions("[0] ------ Exit ------", ConsoleColor.White, ConsoleColor.Yellow);
             bool exit = false;         
             while(!exit)
@@ -105,11 +106,16 @@ namespace MC_mods_installer
                         InitializeRoaming();
                         InitializeDestination();
                         LoadResources();
+                        DownloadConfig.Init();
                         DownloadMods();
+                        DisplayMenu(false);
                         break;
                     case '2':
-                        throw new NotImplementedException();
+                        throw new NotImplementedException("Uninstalling mods is not implemented yet.");
                         // break;
+                    case '5':
+                        DisplayMenu(true);
+                        break;
                     case '0':                        
                         exit = true;
                         break;
@@ -119,13 +125,13 @@ namespace MC_mods_installer
                 }
             }
         }        
-        static string GetExePath()
+        private static string GetExePath()
         {
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
             return exePath;
         }
         public static void DownloadMods(){
-            foreach (Resource mod in DefaultResources.Mods)
+            foreach (Resource mod in Resources.Mods)
             {
                 if (DownloadConfig.Mods[mod.Name])
                 {
