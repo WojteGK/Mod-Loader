@@ -17,7 +17,8 @@ namespace MC_mods_installer
         protected static string RoamingPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         protected static string DestinationPath = $"C:\\Users\\{UserName}\\NevaCraft\\{NevaCraftVersion}";
         protected static string ModsPath = Path.Combine(DestinationPath, "mods");
-        protected static Resources? Resources;
+        public static Resources Resources = new Resources();
+        public static DownloadConfig Config = new DownloadConfig();
         public static void InitializeRoaming(){
             string NevaCraftRoamingPath = Path.Combine(RoamingPath, $"NevaCraft\\{NevaCraftVersion}");
             if (!Directory.Exists(NevaCraftRoamingPath))
@@ -57,40 +58,11 @@ namespace MC_mods_installer
             Console.WriteLine();
             Console.ResetColor();
         }
-        protected static void CreateDefaultResourcesJson(){
-            var resources = new
-            {
-                mods = DefaultResources.Mods,
-                shaders = DefaultResources.Shaders,
-                textures = DefaultResources.Textures
-            };
-            string json = JsonConvert.SerializeObject(resources, Formatting.Indented);
-            File.WriteAllText(Path.Combine(ExePath, "resources.json"), json);
-        }
-        protected static void LoadResources()
-        {            
-            string resourcesJsonFilePath = Path.Combine(ExePath, "resources.json");            
-            try
-            {
-                if (!File.Exists(resourcesJsonFilePath))
-                {
-                    CreateDefaultResourcesJson();
-                    Console.WriteLine($"File not found: {resourcesJsonFilePath}. Created default json instead: {resourcesJsonFilePath}.");  
-                }
-                string json = File.ReadAllText(resourcesJsonFilePath);
-                Resources = JsonConvert.DeserializeObject<Resources>(json);  
-            }            
-            catch (IOException ex)
-            {
-                Console.WriteLine($"I/O error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }            
-        }
+         
         public static void DisplayMenu(bool isCleared = true)
         {
+            Resources res = Resources;
+            DownloadConfig config = Config;
             if (isCleared) { Console.Clear(); }
             WriteColorOptions("[1] -- Install mods --", ConsoleColor.White, ConsoleColor.Green);
             WriteColorOptions("[2] - Uninstall mods -", ConsoleColor.White, ConsoleColor.Red);
@@ -105,10 +77,9 @@ namespace MC_mods_installer
                     case '1':
                         InitializeRoaming();
                         InitializeDestination();
-                        LoadResources();
-                        DownloadConfig.Init();
-                        DownloadMods();
-                        DisplayMenu(false);
+                        res.LoadResources(ExePath);
+                        config.Init(res);
+                        DownloadMods(res);                        
                         break;
                     case '2':
                         throw new NotImplementedException("Uninstalling mods is not implemented yet.");
@@ -130,10 +101,10 @@ namespace MC_mods_installer
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
             return exePath;
         }
-        public static void DownloadMods(){
-            foreach (Resource mod in Resources.Mods)
+        public static void DownloadMods(Resources res){            
+            foreach (Resource mod in res.Mods)
             {
-                if (DownloadConfig.Mods[mod.Name])
+                if (Config.Mods[mod.Name])
                 {
                     Console.WriteLine($"Downloading {mod.Name}...");
                     DownloadFileAsync(mod, ModsPath).Wait();
@@ -144,7 +115,7 @@ namespace MC_mods_installer
         {
             foreach (Resource shader in DefaultResources.Shaders)
             {
-                if (DownloadConfig.Shaders[shader.Name])
+                if (Config.Shaders[shader.Name])
                 {
                     Console.WriteLine($"Downloading {shader.Name}...");
                     DownloadFileAsync(shader, ModsPath).Wait();

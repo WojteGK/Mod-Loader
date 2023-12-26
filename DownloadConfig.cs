@@ -6,32 +6,32 @@ using System.Threading.Tasks;
 
 namespace MC_mods_installer
 {
-    internal static class DownloadConfig
+    internal class DownloadConfig
     {        
-        public static Dictionary<string, bool> Mods = new()
+        public Dictionary<string, bool> Mods = new()
         {
             //{ "mod-name", shouldBeInstalled? },
             
         };
-        public static Dictionary<string, bool> Shaders = new()
+        public Dictionary<string, bool> Shaders = new()
         {
             //{ "shader-name", shouldBeInstalled? },
             
         };
-        public static void Init(){
-            if(DownloadResources.Mods.Count == 0){
-                throw new Exception("DownloadFiles.Mods is empty");
-            }            
-            foreach (Resource mod in DownloadResources.Mods)
+        public void Init(Resources existingResources){     
+            if(existingResources.Mods.Count == 0){
+                throw new Exception("Resources.Shaders is empty");
+            }           
+            foreach (Resource mod in existingResources.Mods)
             {
                 Mods.Add(mod.Name, mod.IsOptional);
             }
-            if(DownloadResources.Shaders.Count == 0){
-                throw new Exception("DownloadFiles.Shaders is empty");
+            if(existingResources.Shaders.Count == 0){
+                throw new Exception("Resources.Shaders is empty");
             }           
-            foreach (Resource shader in DownloadResources.Shaders)
+            foreach (Resource shader in existingResources.Shaders)
             {
-                Mods.Add(shader.Name, shader.IsOptional);
+                Shaders.Add(shader.Name, shader.IsOptional);
             }
         }   
     }
