@@ -18,13 +18,18 @@ namespace MC_mods_installer
             //{ "shader-name", shouldBeInstalled? },
             
         };
+        public Dictionary<string, bool> Textures = new()
+        {
+            //{ "texture-name", shouldBeInstalled? },
+            
+        };
         public void Init(Resources existingResources){     
             if(existingResources.Mods.Count == 0){
                 throw new Exception("Resources.Shaders is empty");
             }           
             foreach (Resource mod in existingResources.Mods)
             {
-                Mods.Add(mod.Name, mod.IsOptional);
+                this.Mods.Add(mod.Name, mod.IsOptional);
             }
             if(existingResources.Shaders.Count == 0){
                 throw new Exception("Resources.Shaders is empty");

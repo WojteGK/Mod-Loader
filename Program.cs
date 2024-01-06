@@ -78,7 +78,7 @@ namespace MC_mods_installer
                         InitializeRoaming();
                         InitializeDestination();
                         res.LoadResources(ExePath);
-                        config.Init(res);
+                        config.Init(res); // throwing exception here, add CW to all funcs to find the problem
                         DownloadMods(res);                        
                         break;
                     case '2':
